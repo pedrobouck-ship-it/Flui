@@ -1,112 +1,113 @@
 
 import { useState, useEffect } from 'react';
-import { OnboardingStep, View } from '../types';
-import { 
-  Rocket, Lightbulb, User, Target, CheckCircle2, 
-  Layout, Settings, Users, Compass
-} from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export const useOnboarding = (onComplete: () => void) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+export interface OnboardingStep {
+  id: string;
+  title: string;
+  estimatedTime: string;
+  isCompleted: boolean;
+  actionId: string;
+}
 
-  const steps: OnboardingStep[] = [
-    {
-      id: 'welcome',
-      title: 'Bem-vindo ao Flui',
-      description: 'Sua jornada para escala eficiente começa aqui. Vamos configurar seu ambiente em 30 segundos.',
-      icon: Rocket,
-      required: true,
-      actions: [{ label: 'Conhecer a interface', type: 'INFO' }]
-    },
-    {
-      id: 'strategy',
-      title: 'Defina sua Estratégia',
-      description: 'Crie seu primeiro Strategy Core para dar contexto à IA e garantir coerência em cada post.',
-      icon: Target,
-      required: true,
-      actions: [{ label: 'Abrir Strategy Studio', type: 'NAVIGATE', targetView: View.STRATEGY }]
-    },
-    {
-      id: 'blueprint',
-      title: 'Escolha um Blueprint',
-      description: 'Estruturas de conteúdo validadas pelo mercado. Carrosséis, vídeos ou landing pages em segundos.',
-      icon: Lightbulb,
-      required: true,
-      actions: [{ label: 'Explorar Blueprints', type: 'NAVIGATE', targetView: View.BLUEPRINTS }]
-    },
-    {
-      id: 'pulse',
-      title: 'Pulse Trends',
-      description: 'Conecte sua estratégia com o que está em alta agora. A IA filtra o ruído para você.',
-      icon: Compass,
-      required: false,
-      actions: [{ label: 'Ver tendências', type: 'NAVIGATE', targetView: View.PULSE }]
-    },
-    {
-      id: 'profile',
-      title: 'Seu Perfil de Marca',
-      description: 'Configure seu tom de voz e arquétipos para que a IA escreva exatamente como você.',
-      icon: User,
-      required: true,
-      actions: [{ label: 'Configurar Marca', type: 'NAVIGATE', targetView: View.PROFILE }]
+const INITIAL_STEPS: OnboardingStep[] = [
+  {
+    id: 'profile',
+    title: 'Complete seu perfil',
+    estimatedTime: '2 min',
+    isCompleted: false,
+    actionId: 'GO_PROFILE'
+  },
+  {
+    id: 'linkedin',
+    title: 'Conecte sua conta LinkedIn',
+    estimatedTime: '1 min',
+    isCompleted: false,
+    actionId: 'CONNECT_LINKEDIN'
+  },
+  {
+    id: 'diagnostic',
+    title: 'Gere seu primeiro diagnóstico',
+    estimatedTime: '5 min',
+    isCompleted: false,
+    actionId: 'GO_STRATEGY'
+  },
+  {
+    id: 'content',
+    title: 'Crie seu primeiro conteúdo',
+    estimatedTime: '10 min',
+    isCompleted: false,
+    actionId: 'GO_SESSIONS'
+  },
+  {
+    id: 'schedule',
+    title: 'Agende sua primeira publicação',
+    estimatedTime: '2 min',
+    isCompleted: false,
+    actionId: 'GO_CALENDAR'
+  }
+];
+
+export const useOnboarding = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [steps, setSteps] = useState<OnboardingStep[]>(INITIAL_STEPS);
+
+  // Computed Progress
+  const completedCount = steps.filter(s => s.isCompleted).length;
+  const totalSteps = steps.length;
+  const progress = Math.round((completedCount / totalSteps) * 100);
+
+  // Check for completion
+  useEffect(() => {
+    if (progress === 100) {
+      triggerCelebration();
+      // Auto collapse after 3 seconds
+      const timer = setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  ];
+  }, [progress]);
+
+  const triggerCelebration = () => {
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#6366F1', '#A855F7', '#EC4899'],
+      disableForReducedMotion: true
+    });
+  };
+
+  const togglePanel = () => setIsOpen(!isOpen);
+  const closePanel = () => setIsOpen(false);
+  const openPanel = () => setIsOpen(true);
+  
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const completeStep = (stepId: string) => {
-    if (!completedSteps.includes(stepId)) {
-      const newCompleted = [...completedSteps, stepId];
-      setCompletedSteps(newCompleted);
-      
-      // Trigger confetti if it was the last required step or last step overall
-      if (newCompleted.length === steps.length) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#6366f1', '#ea580c', '#ffffff']
-        });
-        setTimeout(onComplete, 3000);
-      }
-    }
+    setSteps(prev => prev.map(s => 
+      s.id === stepId ? { ...s, isCompleted: true } : s
+    ));
   };
 
-  const nextStep = () => {
-    if (currentStepIndex < steps.length - 1) {
-      setCurrentStepIndex(prev => prev + 1);
-    }
+  const updateSteps = (newSteps: OnboardingStep[]) => {
+    setSteps(newSteps);
   };
 
-  const prevStep = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
-    }
-  };
-
-  const setStep = (index: number) => {
-    if (index >= 0 && index < steps.length) {
-      setCurrentStepIndex(index);
-    }
-  };
-
-  const openOnboarding = () => setIsOpen(true);
-  const closeOnboarding = () => setIsOpen(false);
-
-  // Return logic
   return {
-    steps,
-    currentStepIndex,
-    completedSteps,
     isOpen,
-    progress: (completedSteps.length / steps.length) * 100,
-    nextStep,
-    prevStep,
-    setStep,
+    isCollapsed,
+    steps,
+    progress,
+    completedCount,
+    totalSteps,
+    togglePanel,
+    closePanel,
+    openPanel,
+    toggleCollapse,
     completeStep,
-    openOnboarding,
-    closeOnboarding,
-    incompleteRequiredCount: steps.filter(s => s.required && !completedSteps.includes(s.id)).length
+    updateSteps
   };
 };
