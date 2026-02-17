@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { View, AssessmentData, StrategyCore, Session, AppState, AppNotification, Recommendation, PlanTier, UserUsage, GateContext } from './types';
 import { supabase } from './lib/supabase';

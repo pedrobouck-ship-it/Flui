@@ -1,4 +1,5 @@
 
+
 export enum View {
   // Auth
   AUTH = 'AUTH',
@@ -67,7 +68,7 @@ export interface VisualPalette {
   text: string; // Tailwind class
   accent: string; // Tailwind class
   surface: string; // Tailwind class for cards/boxes inside slide
-  overlayColor: string; // Hex for overlay calculation
+  overlayColor: string; // Hex for overlay color calculation
 }
 
 export interface VisualTypography {
