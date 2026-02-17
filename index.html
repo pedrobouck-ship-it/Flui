@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluin | Content Intelligence System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              serif: ['"Lora"', 'serif'],
+              display: ['"Plus Jakarta Sans"', 'sans-serif'],
+            },
+            colors: {
+              // Design System: Trust (Strategy, Dashboard)
+              trust: {
+                primary: '#6366F1', // Indigo 500
+                hover: '#4F46E5',   // Indigo 600
+                active: '#4338CA',  // Indigo 700
+                light: '#E0E7FF',   // Indigo 100
+                bg: '#EEF2FF',      // Indigo 50
+                accent: '#06B6D4',  // Cyan 500
+              },
+              // Design System: Energy (Creation, Sprints)
+              energy: {
+                primary: '#A855F7', // Purple 500
+                hover: '#9333EA',   // Purple 600
+                active: '#7E22CE',  // Purple 700
+                light: '#F3E8FF',   // Purple 100
+                bg: '#FAF5FF',      // Purple 50
+                accent: '#EC4899',  // Pink 500
+              },
+              // Neutrals (Slate/Gray based)
+              brand: {
+                dark: '#111827',
+                muted: '#6B7280',
+                border: '#E5E7EB',
+                bg: '#FFFFFF',      // Pure white main bg
+                surface: '#F9FAFB'  // Slight off-white
+              }
+            },
+            backgroundImage: {
+              'primary-gradient': 'linear-gradient(135deg, #6366F1 0%, #A855F7 100%)',
+              'hero-glow': 'radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.03) 50%, rgba(255, 255, 255, 0) 100%)',
+            },
+            boxShadow: {
+              'soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
+              'hover': '0 8px 16px rgba(0, 0, 0, 0.06)',
+            },
+            borderRadius: {
+              'card': '12px',
+              'btn': '8px',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FFFFFF;
+        color: #111827;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Hide scrollbar for clean UI */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Smooth Animations */
+      .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.564.0",
+    "canvas-confetti": "https://esm.sh/canvas-confetti@1.9.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
